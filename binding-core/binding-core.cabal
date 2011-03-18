@@ -1,0 +1,12 @@
+name:           binding-core
+version:        0.1
+cabal-version:  >= 1.2
+author:         Gideon Sireling
+synopsis:       Core data binding functionality
+build-type:     Simple
+category:       GUI, User Interfaces
+
+library
+  build-depends:   base, stm
+  hs-source-dirs:  src
+  exposed-modules: Binding.Core, Binding.Variable

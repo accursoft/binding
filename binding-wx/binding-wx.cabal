@@ -1,0 +1,11 @@
+name:           binding-wx
+version:        0.1
+cabal-version:  >= 1.2
+author:         Gideon Sireling
+synopsis:       WxHaskell interface for Data Binding
+build-type:     Simple
+category:       GUI, User Interfaces
+
+library
+    build-depends:   base, wx, binding-core
+    hs-source-dirs:  src
