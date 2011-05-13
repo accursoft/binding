@@ -1,12 +1,19 @@
 name:           binding-core
-version:        0.1
+version:        0.2
 cabal-version:  >= 1.2
 author:         Gideon Sireling
-synopsis:       Core data binding functionality
+maintainer:     code@accursoft.com
+homepage:       http://code.accursoft.com/binding
+bug-reports:    http://code.accursoft.com/binding/issues
+synopsis:       Data Binding
 build-type:     Simple
 category:       GUI, User Interfaces
 
 library
   build-depends:   base, stm
   hs-source-dirs:  src
-  exposed-modules: Binding.Core, Binding.Variable
+  exposed-modules: Binding.Variable, Binding.Core, Binding.List
+
+source-repository head
+  type:     hg
+  location: https://bitbucket.org/accursoft/binding

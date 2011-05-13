@@ -1,11 +1,20 @@
-name:           binding-wx
-version:        0.1
-cabal-version:  >= 1.2
-author:         Gideon Sireling
-synopsis:       WxHaskell interface for Data Binding
-build-type:     Simple
-category:       GUI, User Interfaces
+name:               binding-wx
+version:            0.2
+cabal-version:      >= 1.2
+author:             Gideon Sireling
+maintainer:         code@accursoft.com
+homepage:           http://code.accursoft.com/binding
+bug-reports:        http://code.accursoft.com/binding/issues
+synopsis:           binding-core wrapper for WxHaskell
+build-type:         Simple
+category:           GUI, User Interfaces
+extra-source-files: demo/demo.hs, demo/in.txt
 
 library
-    build-depends:   base, wx, binding-core
-    hs-source-dirs:  src
+  build-depends:   base, wx, binding-core, stm
+  hs-source-dirs:  src
+  exposed-modules: Binding.Wx
+
+source-repository head
+  type:     hg
+  location: https://bitbucket.org/accursoft/binding

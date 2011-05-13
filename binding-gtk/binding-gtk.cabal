@@ -1,11 +1,20 @@
-name:           binding-gtk
-version:        0.1
-cabal-version:  >= 1.2
-author:         Gideon Sireling
-synopsis:       Gtk2Hs interface for Data Binding
-build-type:     Simple
-category:       GUI, User Interfaces
+name:               binding-gtk
+version:            0.2
+cabal-version:      >= 1.2
+author:             Gideon Sireling
+maintainer:         code@accursoft.com
+homepage:           http://code.accursoft.com/binding
+bug-reports:        http://code.accursoft.com/binding/issues
+synopsis:           binding-core wrapper for Gtk2Hs
+build-type:         Simple
+category:           GUI, User Interfaces
+extra-source-files: demo/demo.hs, demo/in.txt
 
 library
-  build-depends:   base, gtk, binding-core
+  build-depends:   base, gtk, binding-core, mtl
   hs-source-dirs:  src
+  exposed-modules: Binding.Gtk
+
+source-repository head
+  type:     hg
+  location: https://bitbucket.org/accursoft/binding

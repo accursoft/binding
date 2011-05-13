@@ -1,63 +1,58 @@
 {-# LANGUAGE ExistentialQuantification #-}
-module Binding.Core (Source, newSource, bindSource, readSource, writeSource, modifySource) where
+module Binding.Core (module Binding.Variable, Bindable, bind, Source) where
 
 import Binding.Variable
 
--- | A data binding
+-- | A data binding:
 -- @a@ is the type of the data source
 -- @a -> d@ is a function that extracts data from the source
 -- @t@ is the binding target
 -- @d -> t -> IO ()@ is a function that applies data to the target
 data Binding a = forall d t. Binding (a -> d) t (d -> t -> IO ())
 
--- | A binding source
-data Source v a = Variable v => Source {bindings::v [Binding a] -- ^ The source's bindings
-                                       ,source::v a}            -- ^ The data source
+-- | A simple binding source
+data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ The source'a bindings
+                                       ,var      :: v a}          -- ^ The bound variable
 
--- | Update a single binding
+-- | Update a single binding.
 update' :: a -> Binding a -> IO ()
 update' source (Binding extract target apply) = apply (extract source) target
 
--- | Update a binding source's bindings
+-- | Update a binding source's bindings.
 update :: Source v a -> IO ()
-update (Source bindings source) = do bindings <- readVar bindings
-                                     source <- readVar source
-                                     mapM_ (update' source) bindings
+update (Source bindings var) = do bindings <- readVar bindings
+                                  a <- readVar var
+                                  mapM_ (update' a) bindings
 
--- | Create a binding source
-newSource :: Variable v => a -> IO (Source v a)
-newSource a = do source <- newVar a
-                 bindings <- newVar []
-                 return $ Source bindings source
+instance Variable v => Variable (Source v) where
+    newVar a = do bindings <- newVar []
+                  v <- newVar a
+                  return $ Source bindings v
 
--- | Create a data binding
-bindSource :: Source v a        -- ^ The binding source
-           -> (a -> d)          -- ^ A function that extracts data from the source
-           -> t                 -- ^ The binding target
-           -> (d -> t -> IO ()) -- ^ A function that applies data to the target
-           -> IO ()
-bindSource (Source bindings source) extract target apply =
-    do let binding = Binding extract target apply
-       --activate the new binding
-       source <- readVar source
-       update' source binding
-       --add the new binding to the list
-       modifyVar bindings (binding:)
+    readVar = readVar . var
 
--- | Read a binding source
-readSource :: Variable v => Source v a -> IO a
-readSource a = readVar (source a)
+    writeVar s a = writeVar (var s) a >> update s
 
--- | Write a binding source's data
-writeSource :: Variable v => Source v a -> a -> IO ()
-writeSource a d = writeVar (source a) d >> update a
+    modifyVar s f = modifyVar (var s) f >> update s
 
--- | Modify a binding source's data
-modifySource :: Variable v => Source v a -> (a -> a) -> IO ()
-modifySource a f = modifyVar (source a) f >> update a
+    modifyVar' s f = do b <- modifyVar' (var s) f
+                        update s
+                        return b
 
--- | Modify a binding source's data
-modifySource' :: Variable v => Source v a -> (a -> (a,b)) -> IO b
-modifySource' a f = do b <- modifyVar' (source a) f
-                       update a
-                       return b
+-- | Binding sources
+class Variable b => Bindable b where
+    -- | Create a data binding
+    bind :: b a               -- ^ The binding source
+         -> (a -> d)          -- ^ A function that extracts data from the source
+         -> t                 -- ^ The binding target
+         -> (d -> t -> IO ()) -- ^ A function that applies data to the target
+         -> IO ()
+
+instance Variable v => Bindable (Source v) where
+    bind (Source bindings var) extract target apply =
+        do let binding = Binding extract target apply
+           --update the new binding
+           a <- readVar var
+           update' a binding
+           --add the new binding to the list
+           modifyVar bindings (binding:)

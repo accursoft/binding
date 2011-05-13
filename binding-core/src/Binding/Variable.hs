@@ -4,7 +4,6 @@ import Data.IORef
 import Control.Concurrent.MVar
 import Control.Concurrent.STM
 
--- | Mutable variables in the IO Monad
 class Variable v where
     -- | Create a new variable
     newVar     :: a -> IO (v a)
