@@ -34,6 +34,17 @@ main = do -- read the input
           vbox <- vBoxNew False 0
           boxPackStartDefaults vbox table
           boxPackStartDefaults vbox nav
+          -- simple data binding
+          source <- newVar 0 :: IO (Source IORef Double)
+          text1 <- entryNew
+          text2 <- entryNew
+          bindTextEntry source text1
+          bindTextEntry source text2
+          hBox <- hBoxNew True 0
+          boxPackStartDefaults hBox text1
+          boxPackStartDefaults hBox text2
+          boxPackStartDefaults vbox hBox
+          -- create the main window
           window <- windowNew
           set window [containerChild := vbox, windowTitle := "Data Binding with Gtk2Hs"]
           onDestroy window mainQuit

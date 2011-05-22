@@ -25,5 +25,12 @@ main = do -- read the input
                      --arrange the widgits in a window
                      let labels = map (floatRight . label) ["Name:", "Age:", "Active:"]
                      let widgets = map floatLeft [widget name', widget age', widget active']
-                     set window [layout := column 10 [grid 10 10 $ transpose [labels, widgets], nav]
+                     -- simple data binding
+                     source <- newVar 0 :: IO (Source IORef Double)
+                     text1 <- entry window []
+                     text2 <- entry window []
+                     bindTextual source text1
+                     bindTextual source text2
+                     -- create the main window
+                     set window [layout := column 10 [grid 10 10 $ transpose [labels, widgets], nav, floatCentre $ row 10 [widget text1, widget text2]]
                                 ,on closing := fromBindingList bl >>= \l -> writeFile "out.txt" (show l) >> propagateEvent]
