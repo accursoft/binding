@@ -1,6 +1,6 @@
 name:           binding-core
 version:        0.2
-cabal-version:  >= 1.2
+cabal-version:  >= 1.9.2
 author:         Gideon Sireling
 maintainer:     code@accursoft.com
 homepage:       http://code.accursoft.com/binding
@@ -13,6 +13,11 @@ library
   build-depends:   base, stm
   hs-source-dirs:  src
   exposed-modules: Binding.Variable, Binding.Core, Binding.List
+
+test-suite hunit
+  type:            exitcode-stdio-1.0
+  main-is:         tests.hs
+  build-depends:   base, binding-core, random, HUnit
 
 source-repository head
   type:     hg
