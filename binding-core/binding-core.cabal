@@ -16,8 +16,13 @@ library
 
 test-suite hunit
   type:            exitcode-stdio-1.0
-  main-is:         tests.hs
+  main-is:         tests/HUnit.hs
   build-depends:   base, binding-core, random, HUnit
+
+test-suite quickcheck
+  type:            exitcode-stdio-1.0
+  main-is:         tests/QuickCheck.hs
+  build-depends:   base, binding-core, QuickCheck
 
 source-repository head
   type:     hg
