@@ -8,7 +8,7 @@ import Binding.Variable
 -- @a -> d@ is a function that extracts data from the source
 -- @t@ is the binding target
 -- @d -> t -> IO ()@ is a function that applies data to the target
-data Binding a = forall d t. Binding (a -> d) t (d -> t -> IO ())
+data Binding a = forall d t. Binding (a -> d) t (t -> d -> IO ())
 
 -- | A simple binding source
 data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ The source'a bindings
@@ -16,7 +16,7 @@ data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ The sourc
 
 -- | Update a single binding.
 update' :: a -> Binding a -> IO ()
-update' source (Binding extract target apply) = apply (extract source) target
+update' source (Binding extract target apply) = apply target $ extract source
 
 -- | Update a binding source's bindings.
 update :: Source v a -> IO ()
@@ -45,7 +45,7 @@ class Variable b => Bindable b where
     bind :: b a               -- ^ The binding source
          -> (a -> d)          -- ^ A function that extracts data from the source
          -> t                 -- ^ The binding target
-         -> (d -> t -> IO ()) -- ^ A function that applies data to the target
+         -> (t -> d -> IO ()) -- ^ A function that applies data to the target
          -> IO ()
 
 instance Variable v => Bindable (Source v) where

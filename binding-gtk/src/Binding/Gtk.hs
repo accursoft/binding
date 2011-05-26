@@ -14,7 +14,7 @@ bindToControl :: Bindable b =>
               -> c        -- ^ The target control
               -> Attr c d -- ^ The attribute of the control to bind to
               -> IO ()
-bindToControl source extract control attribute = bind source extract control (\d c -> set c [attribute := d])
+bindToControl source extract control attribute = bind source extract control (\c d -> set c [attribute := d])
 
 -- | Bind from a control to a 'Source'.
 -- The source is updated when the control loses focus.
@@ -39,7 +39,7 @@ bindControl :: (WidgetClass c, Bindable b) =>
             -> (a -> d -> a) -- ^ A function that applies data from the control to the source
             -> IO (ConnectId c)
 bindControl source extract control attribute apply = do
-    bind source extract control (\d c -> set c [attribute := d])
+    bindToControl source extract control attribute
     bindFromControl control attribute apply source
 
 -- | Create a simple two-way data binding for a 'Textual' control.
@@ -48,7 +48,7 @@ bindTextEntry :: (Show a, Read a, EntryClass c, WidgetClass c, Bindable b) =>
                -> c   -- ^ The control
                -> IO (ConnectId c)
 bindTextEntry source control = do
-    bind source show control (\d c -> set c [entryText := d])
+    bindToControl source show control entryText
     control `on` focusOutEvent $ liftIO $ do d <- get control entryText
                                              writeVar source (read d)
                                              return False

@@ -1,3 +1,4 @@
+-- | Mutable variables in the IO Monad
 module Binding.Variable where
 
 import Data.IORef
