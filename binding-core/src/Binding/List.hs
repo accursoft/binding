@@ -80,21 +80,21 @@ prev :: Variable v => BindingList v a -> IO Int
 prev = seekBy pred
 
 -- | Remove an elment from a list.
-remove' :: Int -> [a] -> [a]
-remove' pos list = let (xs, _:ys) = splitAt pos list
+remove' :: [a] -> Int ->  [a]
+remove' list pos = let (xs, _:ys) = splitAt pos list
                    in xs ++ ys
 
 -- | Remove the current element from the list.
 remove :: BindingList v a -> IO Int
 remove b@(BindingList _ list pos) = do list' <- readVar list
                                        pos' <- readVar pos
-                                       writeVar list $ remove' pos' list'
+                                       writeVar list $ remove' list' pos'
                                        seek' b (if pos' == P.length list' - 1 then pos' - 1 else pos')
 
 -- | Insert an element into a list.
-insert' :: a -> Int -> [a] -> [a]
-insert' x pos list = let (xs, ys) = splitAt pos list
-                         in xs ++ [x] ++ ys
+insert' :: [a] -> Int -> a -> [a]
+insert' list pos x = let (xs, ys) = splitAt pos list
+                     in xs ++ [x] ++ ys
 
 -- | Insert an element into the list.
 -- The new element is inserted after the current element.
@@ -105,5 +105,5 @@ insert b@(BindingList _ list pos) x = do update b
                                          pos' <- readVar pos
                                          x' <- newVar x
                                          let pos'' = pos' + 1
-                                         writeVar list $ insert' x' pos'' list'
+                                         writeVar list $ insert' list' pos'' x'
                                          seek' b pos''

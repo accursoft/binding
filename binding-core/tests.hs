@@ -86,13 +86,13 @@ testRemove = do (list, size, bl) <- list
                 pos <- randomRIO (0, size-2)
                 seek bl pos
                 remove bl >>= assertPos pos bl
-                assertList (remove' pos list) bl
+                assertList (remove' list pos) bl
 
 testRemoveLast :: Assertion
 testRemoveLast = do (list, size, bl) <- list
                     seek bl (size-1)
                     remove bl >>= assertPos (size-2) bl
-                    assertList (remove' (size-1) list) bl
+                    assertList (remove' list (size-1)) bl
 
 testInsert :: Assertion
 testInsert = do (list, size, bl) <- list
@@ -101,7 +101,7 @@ testInsert = do (list, size, bl) <- list
                 seek bl pos
                 let pos' = pos+1
                 insert bl new >>= assertPos pos' bl
-                assertList (insert' new pos' list) bl
+                assertList (insert' list pos' new) bl
 
 main = do Counts _ _ e f <- runTestTT $ TestList
               ["Source" ~: testSource
