@@ -15,8 +15,8 @@ type A = Int
 
 -- *** Test pure helpers ***
 
--- | Generate a list for testing
--- Many operations are expected to fail on lists of less than 2 elements
+-- | Generate a list for testing.
+-- Many operations are expected to fail on lists of less than 2 elements.
 list' :: IO ([A], Int)
 list' = do size <- randomRIO (2,100)
            list <- replicateM size randomIO
@@ -50,28 +50,28 @@ testInsert' = do (list, size) <- list'
 
 testSource :: Assertion
 testSource = do --bind a source
-             expected <- randomIO
-             source <- newVar expected :: IO (Source V A)
-             target <- randomIO >>= newVar :: IO (Source V A)
-             bind source id target writeVar
-             actual <- readVar target
-             assertEqual "Initial Bind" expected actual
-             --change its value
-             expected <- randomIO
-             writeVar source expected
-             actual <- readVar target
-             assertEqual "Value Changed" expected actual
+                expected <- randomIO
+                source <- newVar expected :: IO (Source V A)
+                target <- randomIO >>= newVar :: IO (Source V A)
+                bind source id target writeVar
+                actual <- readVar target
+                assertEqual "Initial Bind" expected actual
+                --change its value
+                expected <- randomIO
+                writeVar source expected
+                actual <- readVar target
+                assertEqual "Value Changed" expected actual
 
--- | Generate a 'BindingList' for testing
+-- | Generate a 'BindingList' for testing.
 list :: IO ([A], Int, BindingList V A)
 list = do (list, size) <- list'
           liftM (list, size,) (toBindingList list)
 
--- | Assert that a 'BindingList' holds the expected list
+-- | Assert that a 'BindingList' holds the expected list.
 assertList :: [A] -> BindingList V A -> Assertion
 assertList list bl = fromBindingList bl >>= (list @=?)
 
--- | Assert that a 'BindingList' holds the expected list
+-- | Assert that a 'BindingList' holds the expected list.
 assertPos :: Int -> BindingList V A -> Int -> Assertion
 assertPos expected bl reported = do pos <- position bl
                                     assertEqual "Wrong positon" expected pos
@@ -138,17 +138,17 @@ testInsert = do (list, size, bl) <- list
                 assertList (insert' list pos' new) bl
 
 main = do Counts _ _ e f <- runTestTT $ TestList
-              ["Source" ~: testSource
-              ,"binding lists" ~: testList
-              ,"length" ~: testLength
-              ,"seek" ~: testSeek
-              ,"seekBy" ~: testSeekBy
-              ,"next" ~: testNext
-              ,"prev" ~: testPrev
-              ,"remove'" ~: testRemove'
-              ,"remove" ~: testRemove
-              ,"remove' last" ~: testRemoveLast'
-              ,"remove last" ~: testRemoveLast
-              ,"insert'" ~: testInsert'
-              ,"insert" ~: testInsert]
+             ["Source" ~: testSource
+             ,"binding lists" ~: testList
+             ,"length" ~: testLength
+             ,"seek" ~: testSeek
+             ,"seekBy" ~: testSeekBy
+             ,"next" ~: testNext
+             ,"prev" ~: testPrev
+             ,"remove'" ~: testRemove'
+             ,"remove" ~: testRemove
+             ,"remove' last" ~: testRemoveLast'
+             ,"remove last" ~: testRemoveLast
+             ,"insert'" ~: testInsert'
+             ,"insert" ~: testInsert]
           when (e>0 || f>0) exitFailure

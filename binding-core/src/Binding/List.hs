@@ -8,9 +8,9 @@ import Control.Monad
 import Binding.Core
 
 -- | Associates a binding source with a list of data sources.
-data BindingList v a = Variable v => BindingList {source :: Source v a -- ^ The list's binding source
-                                                 ,list   :: v [v a]    -- ^ The bound list
-                                                 ,pos    :: v Int}     -- ^ The current position
+data BindingList v a = Variable v => BindingList {source :: Source v a -- ^ the list's binding source
+                                                 ,list   :: v [v a]    -- ^ the bound list
+                                                 ,pos    :: v Int}     -- ^ the current position
 -- [v a] is itself in a Variable, to allow for insertions and deletions.
 
 -- | Create a binding list.
@@ -27,22 +27,22 @@ update (BindingList source list pos) = do list' <- readVar list
                                           pos' <- readVar pos
                                           readVar source >>= writeVar (list' !! pos')
 
--- | Extract the data from a binding list  .
+-- | Extract the data from a binding list.
 fromBindingList :: Variable v => BindingList v a -> IO [a]
 fromBindingList b = do update b
                        readVar (list b) >>= mapM readVar
 
--- | Interface to the binding list's 'Source'.
+-- | interface to the binding list's 'Source'
 instance Variable v => Variable (BindingList v) where
-    {- WARNING warn "Did you mean to use newBindingList?" -}
-    newVar = warn where warn a = toBindingList [a]
-    readVar = readVar . source
-    writeVar = writeVar . source
-    modifyVar = modifyVar . source
-    modifyVar' = modifyVar' . source
+   {- WARNING warn "Did you mean to use newBindingList?" -}
+   newVar = warn where warn a = toBindingList [a]
+   readVar = readVar . source
+   writeVar = writeVar . source
+   modifyVar = modifyVar . source
+   modifyVar' = modifyVar' . source
 
 instance Variable v => Bindable (BindingList v) where
-    bind = bind . source
+   bind = bind . source
 
 -- | The size of a binding list.
 length :: Variable v => BindingList v a -> IO Int
@@ -54,7 +54,7 @@ position :: Variable v => BindingList v a -> IO Int
 position b = readVar $ pos b
 
 -- | Bind to a new position in a binding list.
--- Returns the new positon; this is convinient for 'seekBy' and friends.
+-- Returns the new position; this is convenient for 'seekBy' and friends.
 seek:: Variable v => BindingList v a -> Int -> IO Int
 seek b new = do pos' <- readVar $ pos b
                 if pos' == new then return new else update b >> seek' b new
@@ -66,7 +66,7 @@ seek' (BindingList source list pos) new = do list' <- readVar list
                                              writeVar pos new
                                              return new
 
--- | Bind to a new position in a binding list .
+-- | Bind to a new position in a binding list.
 seekBy :: Variable v => (Int -> Int) -> BindingList v a -> IO Int
 seekBy f bindingList = do pos <- readVar (pos bindingList)
                           seek bindingList $ f pos
@@ -79,7 +79,7 @@ next = seekBy succ
 prev :: Variable v => BindingList v a -> IO Int
 prev = seekBy pred
 
--- | Remove an elment from a list.
+-- | Remove an element from a list.
 remove' :: [a] -> Int ->  [a]
 remove' list pos = let (xs, _:ys) = splitAt pos list
                    in xs ++ ys

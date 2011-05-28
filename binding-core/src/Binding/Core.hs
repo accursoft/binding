@@ -10,9 +10,9 @@ import Binding.Variable
 -- @d -> t -> IO ()@ is a function that applies data to the target
 data Binding a = forall d t. Binding (a -> d) t (t -> d -> IO ())
 
--- | A simple binding source
-data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ The source'a bindings
-                                       ,var      :: v a}          -- ^ The bound variable
+-- | A simple binding source.
+data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ the source's bindings
+                                       ,var      :: v a}          -- ^ the bound variable
 
 -- | Update a single binding.
 update' :: a -> Binding a -> IO ()
@@ -25,34 +25,34 @@ update (Source bindings var) = do bindings <- readVar bindings
                                   mapM_ (update' a) bindings
 
 instance Variable v => Variable (Source v) where
-    newVar a = do bindings <- newVar []
-                  v <- newVar a
-                  return $ Source bindings v
+   newVar a = do bindings <- newVar []
+                 v <- newVar a
+                 return $ Source bindings v
 
-    readVar = readVar . var
+   readVar = readVar . var
 
-    writeVar s a = writeVar (var s) a >> update s
+   writeVar s a = writeVar (var s) a >> update s
 
-    modifyVar s f = modifyVar (var s) f >> update s
+   modifyVar s f = modifyVar (var s) f >> update s
 
-    modifyVar' s f = do b <- modifyVar' (var s) f
-                        update s
-                        return b
+   modifyVar' s f = do b <- modifyVar' (var s) f
+                       update s
+                       return b
 
--- | Binding sources
+-- | Binding sources.
 class Variable b => Bindable b where
-    -- | Create a data binding
-    bind :: b a               -- ^ The binding source
-         -> (a -> d)          -- ^ A function that extracts data from the source
-         -> t                 -- ^ The binding target
-         -> (t -> d -> IO ()) -- ^ A function that applies data to the target
-         -> IO ()
+   -- | Create a data binding
+   bind :: b a               -- ^ the binding source
+        -> (a -> d)          -- ^ a function that extracts data from the source
+        -> t                 -- ^ the binding target
+        -> (t -> d -> IO ()) -- ^ a function that applies data to the target
+        -> IO ()
 
 instance Variable v => Bindable (Source v) where
-    bind (Source bindings var) extract target apply =
-        do let binding = Binding extract target apply
-           --update the new binding
-           a <- readVar var
-           update' a binding
-           --add the new binding to the list
-           modifyVar bindings (binding:)
+   bind (Source bindings var) extract target apply =
+      do let binding = Binding extract target apply
+         --update the new binding
+         a <- readVar var
+         update' a binding
+         --add the new binding to the list
+         modifyVar bindings (binding:)
