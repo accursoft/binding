@@ -8,8 +8,7 @@ import Binding.Wx
 
 data Person = Person {name::String, age::Int, active::Bool} deriving (Read, Show)
 
-main::IO()
-main = do -- read the input
+main = do --read the input
           f <- readFile "in.txt"
           bl <- toBindingList $ read f :: IO (BindingList IORef Person)
           start $ do --create widgits
@@ -22,15 +21,9 @@ main = do -- read the input
                      bindControl bl name name' text (\p n -> p {name = n})
                      bindControl bl (fromIntegral . age) age' selection (\p a -> p {age = a})
                      bindControl bl active active' checked (\p a -> p {active = a})
-                     --arrange the widgits in a window
+                     --arrange the widgits
                      let labels = map (floatRight . label) ["Name:", "Age:", "Active:"]
                      let widgets = map floatLeft [widget name', widget age', widget active']
-                     -- simple data binding
-                     source <- newVar 0 :: IO (Source IORef Double)
-                     text1 <- entry window []
-                     text2 <- entry window []
-                     bindTextual source text1
-                     bindTextual source text2
-                     -- create the main window
-                     set window [layout := column 10 [grid 10 10 $ transpose [labels, widgets], nav, floatCentre $ row 10 [widget text1, widget text2]]
+                     --start the application
+                     set window [layout := column 10 [grid 10 10 $ transpose [labels, widgets], nav]
                                 ,on closing := fromBindingList bl >>= \l -> writeFile "out.txt" (show l) >> propagateEvent]

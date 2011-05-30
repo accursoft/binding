@@ -8,7 +8,7 @@ bug-reports:        http://code.accursoft.com/binding/issues
 synopsis:           binding-core wrapper for WxHaskell
 build-type:         Simple
 category:           GUI, User Interfaces
-extra-source-files: demo/demo.hs, demo/in.txt
+extra-source-files: demo/simple.hs demo/lists.hs, demo/in.txt
 
 library
   build-depends:   base, wx, binding-core, stm

@@ -7,8 +7,7 @@ import Binding.Gtk
 
 data Person = Person {name::String, age::Int, active::Bool} deriving (Read, Show)
 
-main::IO()
-main = do -- read the input
+main = do --read the input
           f <- readFile "in.txt"
           bl <- toBindingList $ read f :: IO (BindingList IORef Person)
           --create widgits
@@ -21,7 +20,7 @@ main = do -- read the input
           bindControl bl name name' entryText (\p n -> p {name = n})
           bindControl bl (fromIntegral . age) age' spinButtonValue (\p a -> p {age = round a})
           bindControl bl active active' toggleButtonActive (\p a -> p {active = a})
-          --arrange the widgits in a window
+          --arrange the widgits
           table <- tableNew 3 2 True
 
           zipWithM_ (\cap row -> do label <- labelNew $ Just cap
@@ -31,22 +30,12 @@ main = do -- read the input
           zipWithM_ (\wid row -> tableAttachDefaults table wid 1 2 row (row+1))
                     [toWidget name', toWidget age', toWidget active'] [0..2]
 
-          vbox <- vBoxNew False 0
-          boxPackStartDefaults vbox table
-          boxPackStartDefaults vbox nav
-          -- simple data binding
-          source <- newVar 0 :: IO (Source IORef Double)
-          text1 <- entryNew
-          text2 <- entryNew
-          bindTextEntry source text1
-          bindTextEntry source text2
-          hBox <- hBoxNew True 0
-          boxPackStartDefaults hBox text1
-          boxPackStartDefaults hBox text2
-          boxPackStartDefaults vbox hBox
-          -- create the main window
+          vBox <- vBoxNew False 0
+          boxPackStartDefaults vBox table
+          boxPackStartDefaults vBox nav
+          --create the main window
           window <- windowNew
-          set window [containerChild := vbox, windowTitle := "Data Binding with Gtk2Hs"]
+          set window [containerChild := vBox, windowTitle := "Data Binding with Gtk2Hs"]
           onDestroy window mainQuit
           --start the application
           widgetShowAll window
