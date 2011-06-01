@@ -69,10 +69,12 @@ navigation owner bl new = do spin <- spinCtrl owner 0 1 [on select ::= \s -> get
                                              ,("-", remove bl >>= go >> setRange)]
                                              $ \(t,c) -> button owner [text := t, on command := c]
 
+                             --disable the delete button when there's only one element
                              let del = last buttons
                              del `set` [on command :~ (>> do l <- B.length bl
                                                              del `set` [enabled := l > 1])                                                               ]
 
-                             (buttons !! 2) `set` [on command :~ (>> del `set` [enabled := True])] --"+"
+                             --inserting enables the delete button
+                             (buttons !! 2) `set` [on command :~ (>> del `set` [enabled := True])]
 
                              return $ row 0 $ widget spin : map widget buttons

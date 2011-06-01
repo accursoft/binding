@@ -10,7 +10,7 @@ import Data.Variable
 -- @d -> t -> IO ()@ is a function that applies data to the target
 data Binding a = forall d t. Binding (a -> d) t (t -> d -> IO ())
 
--- | A simple binding source.
+-- | Binding Source
 data Source v a = Variable v => Source {bindings :: v [Binding a] -- ^ the source's bindings
                                        ,var      :: v a}          -- ^ the bound variable
 
@@ -39,7 +39,7 @@ instance Variable v => Variable (Source v) where
                        update s
                        return b
 
--- | Binding sources.
+-- | Sources for data binding.
 class Variable b => Bindable b where
    -- | Create a data binding
    bind :: b a               -- ^ the binding source

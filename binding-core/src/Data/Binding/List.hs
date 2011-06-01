@@ -7,7 +7,7 @@ import Control.Monad
 
 import Data.Binding.Simple
 
--- | Associates a binding source with a list of data sources.
+-- | Binding List
 data BindingList v a = Variable v => BindingList {source :: Source v a -- ^ the list's binding source
                                                  ,list   :: v [v a]    -- ^ the bound list
                                                  ,pos    :: v Int}     -- ^ the current position

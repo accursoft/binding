@@ -1,4 +1,4 @@
--- | Mutable variables in the IO Monad
+-- | Mutable variables in the IO Monad.
 module Data.Variable where
 
 import Data.IORef

@@ -70,11 +70,13 @@ navigation bl new = do spin <- spinButtonNewWithRange 0 1 1
                                                       on b buttonActivated c
                                                       return b
 
+                       --disable the delete button when there's only one element
                        let del = last buttons
                        del `on` buttonActivated $ do l <- B.length bl
                                                      del `set` [widgetSensitive := l > 1]
 
-                       (buttons !! 2) `on` buttonActivated $ del `set` [widgetSensitive := True] --"+"
+                       --inserting enables the delete button
+                       (buttons !! 2) `on` buttonActivated $ del `set` [widgetSensitive := True]
 
                        box <- hButtonBoxNew
                        containerAdd box spin
