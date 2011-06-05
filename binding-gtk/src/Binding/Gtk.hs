@@ -71,10 +71,10 @@ navigation bl new = do spin <- spinButtonNewWithRange 0 1 1
                                                       return b
 
                        let del = last buttons
-                       on del buttonActivated $ do l <- B.length bl
-                                                   set del [widgetSensitive := l > 1]
+                       del `on` buttonActivated $ do l <- B.length bl
+                                                     del `set` [widgetSensitive := l > 1]
 
-                       on (buttons !! 2) buttonActivated $ set del [widgetSensitive := True] --"+"
+                       (buttons !! 2) `on` buttonActivated $ del `set` [widgetSensitive := True] --"+"
 
                        box <- hButtonBoxNew
                        containerAdd box spin

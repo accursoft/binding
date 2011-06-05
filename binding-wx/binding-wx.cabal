@@ -11,7 +11,7 @@ category:           GUI, User Interfaces
 extra-source-files: demo/simple.hs demo/lists.hs, demo/in.txt
 
 library
-  build-depends:   base, wx, binding-core, stm
+  build-depends:   base, wxcore, wx, binding-core, stm
   hs-source-dirs:  src
   exposed-modules: Binding.Wx
 

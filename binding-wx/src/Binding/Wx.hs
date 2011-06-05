@@ -3,6 +3,7 @@ module Binding.Wx where
 
 import Control.Monad
 import Graphics.UI.WX
+import Graphics.UI.WXCore
 
 import Binding.List as B
 
@@ -58,19 +59,20 @@ navigation :: Variable v =>
            -> BindingList v a -- ^ the binding list
            -> a               -- ^ the default value for inserts
            -> IO Layout
-navigation owner bl new = do l <- B.length bl
-                             spin <- spinCtrl owner 0 (l-1) [on select ::= \s -> get s selection >>= seek bl >> return ()]
-                             let go i = set spin [selection := i] >> seek bl i
-                             buttons <- forM [("<<", go 0)
-                                             ,(">>", B.length bl >>= go . pred)
-                                             ,("+", insert bl new >>= go)
-                                             ,("-", remove bl >>= go)]
-                                             $ \(t,c) -> button owner [text := t, on command := c >> return ()]
+navigation owner bl new = do spin <- spinCtrl owner 0 1 [on select ::= \s -> get s selection >>= seek bl >> return ()]
+                             let setRange = B.length bl >>= spinCtrlSetRange spin 0 . pred
+                             setRange
+                             let go i = spin `set` [selection := i] >> seek bl i
+                             buttons <- forM [("<<", go 0 >> return ())
+                                             ,(">>", B.length bl >>= go . pred >> return ())
+                                             ,("+", insert bl new >>= go >> setRange)
+                                             ,("-", remove bl >>= go >> setRange)]
+                                             $ \(t,c) -> button owner [text := t, on command := c]
 
                              let del = last buttons
-                             set del [on command :~ (>> do l <- B.length bl
-                                                           set del [enabled := l > 1])                                                               ]
+                             del `set` [on command :~ (>> do l <- B.length bl
+                                                             del `set` [enabled := l > 1])                                                               ]
 
-                             set (buttons !! 2) [on command :~ (>> set del [enabled := True])] --"+"
+                             (buttons !! 2) `set` [on command :~ (>> del `set` [enabled := True])] --"+"
 
                              return $ row 0 $ widget spin : map widget buttons
