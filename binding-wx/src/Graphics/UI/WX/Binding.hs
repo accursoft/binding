@@ -1,11 +1,11 @@
 {-# LANGUAGE RankNTypes #-}
-module Binding.Wx where
+module Graphics.UI.WX.Binding where
 
 import Control.Monad
 import Graphics.UI.WX
 import Graphics.UI.WXCore
 
-import Binding.List as B
+import Data.Binding.List as B
 
 -- | Bind a 'Source' to a control.
 bindToControl :: Bindable b =>

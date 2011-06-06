@@ -13,8 +13,8 @@ extra-source-files: demo/simple.hs demo/lists.hs, demo/in.txt
 library
   build-depends:   base, wxcore, wx, binding-core, stm
   hs-source-dirs:  src
-  exposed-modules: Binding.Wx
-
+  exposed-modules: Graphics.UI.WX.Binding
+  
 source-repository head
   type:     hg
   location: https://bitbucket.org/accursoft/binding

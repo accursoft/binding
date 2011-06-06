@@ -12,7 +12,7 @@ category:       GUI, User Interfaces
 library
   build-depends:   base, stm
   hs-source-dirs:  src
-  exposed-modules: Binding.Variable, Binding.Core, Binding.List
+  exposed-modules: Data.Binding.Simple, Data.Binding.List, Data.Variable
 
 test-suite hunit
   type:            exitcode-stdio-1.0

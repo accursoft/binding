@@ -6,7 +6,7 @@ import Data.IORef
 import System.Exit
 import System.Random
 
-import Binding.List as B
+import Data.Binding.List as B
 import Prelude as P
 
 -- Change these to exercise different variable and data types

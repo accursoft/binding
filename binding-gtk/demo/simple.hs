@@ -1,8 +1,8 @@
 import Data.IORef
 import Graphics.UI.Gtk
 
-import Binding.Core
-import Binding.Gtk
+import Data.Binding.Simple
+import Graphics.UI.Gtk.Binding
 
 main = do --create widgits
           initGUI

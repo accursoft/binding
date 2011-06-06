@@ -9,7 +9,7 @@ import Control.Monad
 import Data.IORef
 import System.Exit
 
-import Binding.List as B
+import Data.Binding.List as B
 import Prelude as P
 
 -- Change these to exercise different variable and data types

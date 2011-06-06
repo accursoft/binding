@@ -1,8 +1,8 @@
 import Data.IORef
 import Graphics.UI.WX
 
-import Binding.Core
-import Binding.Wx
+import Data.Binding.Simple
+import Graphics.UI.WX.Binding
 
 main = start $ do --create widgits
                   window <- frame [text := "Data Binding with WxHaskell"]

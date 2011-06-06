@@ -1,5 +1,5 @@
 -- | Mutable variables in the IO Monad
-module Binding.Variable where
+module Data.Variable where
 
 import Data.IORef
 import Control.Concurrent.MVar

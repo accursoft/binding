@@ -1,7 +1,7 @@
 {-# LANGUAGE ExistentialQuantification #-}
-module Binding.Core (module Binding.Variable, Bindable, bind, Source) where
+module Data.Binding.Simple (module Data.Variable, Bindable, bind, Source) where
 
-import Binding.Variable
+import Data.Variable
 
 -- | A data binding:
 -- @a@ is the type of the data source

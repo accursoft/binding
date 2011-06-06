@@ -3,8 +3,8 @@ import Data.IORef
 import Data.List
 import Graphics.UI.WX
 
-import Binding.List
-import Binding.Wx
+import Data.Binding.List
+import Graphics.UI.WX.Binding
 
 data Person = Person {name::String, age::Int, active::Bool} deriving (Read, Show)
 

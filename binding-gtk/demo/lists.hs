@@ -2,8 +2,8 @@ import Data.IORef
 import Control.Monad
 import Graphics.UI.Gtk
 
-import Binding.List
-import Binding.Gtk
+import Data.Binding.List
+import Graphics.UI.Gtk.Binding
 
 data Person = Person {name::String, age::Int, active::Bool} deriving (Read, Show)
 

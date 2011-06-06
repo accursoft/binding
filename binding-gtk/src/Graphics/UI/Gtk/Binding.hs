@@ -1,11 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
-module Binding.Gtk where
+module Graphics.UI.Gtk.Binding where
 
 import Control.Monad
 import Control.Monad.Trans
 import Graphics.UI.Gtk
 
-import Binding.List as B
+import Data.Binding.List as B
 
 -- | Bind a 'Source' to a control.
 bindToControl :: Bindable b =>
