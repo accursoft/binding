@@ -1,0 +1,4 @@
+syntax: glob
+
+.metadata
+.dist-buildwrapper
