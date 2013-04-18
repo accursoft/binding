@@ -15,7 +15,7 @@ description:        Bind mutable data and lists to Gtk2Hs widgets.
                     Examples are provided by the included demo programs.
 
 library
-  build-depends:   base <5, gtk, binding-core, mtl
+  build-depends:   base <5, gtk, binding-core >=0.2, mtl
   hs-source-dirs:  src
   exposed-modules: Graphics.UI.Gtk.Binding
 

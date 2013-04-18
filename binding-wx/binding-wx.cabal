@@ -15,7 +15,7 @@ description:        Bind mutable data and lists to WxHaskell widgets.
                     Examples are provided by the included demo programs.
 
 library
-  build-depends:   base <5, wxcore, wx, binding-core, stm
+  build-depends:   base <5, wxcore, wx, binding-core >=0.2, stm
   hs-source-dirs:  src
   exposed-modules: Graphics.UI.WX.Binding
 
