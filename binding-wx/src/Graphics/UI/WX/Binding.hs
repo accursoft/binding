@@ -53,6 +53,7 @@ bindTextual source control = do
                                                 writeVar source (read d)
                                                 propagateEvent]
 
+{-# ANN navigation "HLint: ignore Use void" #-}
 -- | Create a set of navigation buttons for a binding list.
 navigation :: Variable v =>
               Window w        -- ^ the buttons' owner

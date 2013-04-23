@@ -53,6 +53,7 @@ bindTextEntry source control = do
                                             writeVar source (read d)
                                             return False
 
+{-# ANN navigation "HLint: ignore Use void" #-}
 -- | Create a set of navigation buttons for a binding list.
 navigation :: Variable v =>
               BindingList v a -- ^ the binding list
