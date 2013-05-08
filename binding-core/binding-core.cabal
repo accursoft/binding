@@ -18,15 +18,11 @@ library
   hs-source-dirs:  src
   exposed-modules: Data.Binding.Simple, Data.Binding.List, Data.Variable
 
-test-suite hunit
-  type:            exitcode-stdio-1.0
-  main-is:         tests/HUnit.hs
-  build-depends:   base, binding-core, random, HUnit
-
-test-suite quickcheck
-  type:            exitcode-stdio-1.0
-  main-is:         tests/QuickCheck.hs
-  build-depends:   base, binding-core, QuickCheck
+test-suite HTF
+  type:           exitcode-stdio-1.0
+  main-is:        HTF.hs
+  build-depends:  base, binding-core, random, HTF, HUnit, QuickCheck
+  hs-source-dirs: tests
 
 source-repository head
   type:     hg

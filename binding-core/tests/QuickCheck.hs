@@ -1,16 +1,18 @@
-{-# LANGUAGE TupleSections, TemplateHaskell #-}
-import Test.QuickCheck
-import Test.QuickCheck.Modifiers
+{-# OPTIONS_GHC -F -pgmF htfpp #-}
+{-# LANGUAGE TupleSections #-}
+
+module QuickCheck where
+
+import Test.Framework
 import Test.QuickCheck.Monadic
-import Test.QuickCheck.All
-import Test.QuickCheck.Test
 
 import Control.Monad
 import Data.IORef
-import System.Exit
 
 import Data.Binding.List as B
 import Prelude as P
+
+{-# ANN module "HLint: ignore Use camelCase" #-}
 
 -- Change these to exercise different variable and data types
 type V = IORef
@@ -42,26 +44,26 @@ list xs pos = do bl <- toBindingList xs
 
 -- *** Test pure functions ***
 
-prop_remove' :: [A] -> Int -> Bool
-prop_remove' xs i = let pos = anywhere i xs
-                        actual = remove' xs pos
-                    in P.length actual == P.length xs - 1
-                    && take pos actual == take pos xs
-                    && drop (pos+1) xs == drop pos actual
+prop_remove' :: NonEmptyList A -> Int -> Bool
+prop_remove' (NonEmpty xs) i = let pos = anywhere i xs
+                                   actual = remove' xs pos
+                               in P.length actual == P.length xs - 1
+                               && take pos actual == take pos xs
+                               && drop (pos+1) xs == drop pos actual
 
-prop_removeLast' :: [A] -> Bool
-prop_removeLast' xs = let pos = P.length xs - 1
-                          actual = remove' xs pos
-                      in P.length actual == pos
-                      && actual == take pos xs
+prop_removeLast' :: NonEmptyList A -> Bool
+prop_removeLast' (NonEmpty xs) = let pos = P.length xs - 1
+                                     actual = remove' xs pos
+                                 in P.length actual == pos
+                                 && actual == take pos xs
 
-prop_insert' :: [A] -> Int -> A -> Bool
-prop_insert' xs i x = let pos = anywhere i xs
-                          actual = insert' xs pos x
-                      in P.length actual == P.length xs + 1
-                      && take pos actual == take pos xs
-                      && actual !! pos == x
-                      && drop pos actual == drop (pos+1) xs
+prop_insert' :: NonEmptyList A -> Int -> A -> Bool
+prop_insert' (NonEmpty xs) i x = let pos = anywhere i xs
+                                     actual = insert' xs pos x
+                                 in P.length actual == P.length xs + 1
+                                 && take pos actual == take pos xs
+                                 && actual !! pos == x
+                                 && drop pos xs == drop (pos+1) actual
 
 -- *** QuickCheck 'Property's for Monadic actions. ***
 
@@ -99,11 +101,10 @@ prop_position (NonEmpty xs) i = let pos = anywhere i xs in monadicIO $ do
    new <- run $ list xs pos >>= position
    assert (new == pos)
 
-prop_seekBy :: List -> Int -> Int -> Property
-prop_seekBy (List xs) a b = let size = P.length xs
-                                init = anywhere a xs
-                                offset = anywhere b xs - init
-                            in monadicIO $ do
+prop_seekBy :: NonEmptyList A -> Int -> Int -> Property
+prop_seekBy (NonEmpty xs) a b = let init = anywhere a xs
+                                    offset = anywhere b xs - init
+                                in monadicIO $ do
    (new, x) <- run $ do bl <- list xs init
                         liftM2 (,) (seekBy (offset+) bl) (readVar bl)
    assert (new == init + offset && x == xs !! new)
@@ -120,10 +121,10 @@ prop_prev (List xs) i = let pos = anywhere i xs + 1 in monadicIO $ do
                         liftM2 (,) (prev bl) (readVar bl)
    assert (new == pos - 1 && x == xs !! new)
 
-prop_insert :: List -> Int -> A -> Property
-prop_insert (List xs) i x = let pos = anywhere i xs
-                                new = pos + 1
-                            in monadicIO $ do
+prop_insert :: NonEmptyList A -> Int -> A -> Property
+prop_insert (NonEmpty xs) i x = let pos = anywhere i xs
+                                    new = pos + 1
+                                in monadicIO $ do
    (pos', ys) <- run $ do bl <- list xs pos
                           liftM2 (,) (insert bl x) (fromBindingList bl)
    assert (ys == insert' xs new x && pos' == new)
@@ -142,7 +143,3 @@ prop_removeLast :: List -> Property
 prop_removeLast (List xs) = let pos = P.length xs - 1 in monadicIO $ do
    (pos', ys) <- testRemove xs pos
    assert (ys == remove' xs pos && pos' == pos -1)
-
--- | Test the 'Property's
-main = do passed <- $quickCheckAll
-          unless passed exitFailure
