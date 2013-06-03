@@ -1,1 +1,0 @@
-[Person {name = "Joe", age = 32, active = True},Person {name = "Fred", age = 50, active = False},Person {name = "Alice", age = 43, active = True}]

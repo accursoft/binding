@@ -1,6 +1,6 @@
 name:               binding-wx
 version:            0.2
-cabal-version:      >= 1.6
+cabal-version:      >= 1.9.2
 license:            BSD3
 license-file:       LICENSE
 author:             Gideon Sireling
@@ -10,7 +10,6 @@ bug-reports:        http://code.accursoft.com/binding/issues
 synopsis:           Data Binding in WxHaskell
 build-type:         Simple
 category:           GUI, User Interfaces
-extra-source-files: demo/simple.hs demo/lists.hs, demo/in.txt
 description:        Bind mutable data and lists to WxHaskell widgets.
                     Examples are provided by the included demo programs.
 
@@ -18,6 +17,18 @@ library
   build-depends:   base <5, wxcore, wx, binding-core >=0.2, stm
   hs-source-dirs:  src
   exposed-modules: Graphics.UI.WX.Binding
+
+test-suite simple
+  type:           exitcode-stdio-1.0
+  main-is:        simple.hs
+  build-depends:  base, wx, binding-core >=0.2, binding-wx
+  hs-source-dirs: demo
+
+test-suite lists
+  type:           exitcode-stdio-1.0
+  main-is:        lists.hs
+  build-depends:  base, wx, binding-core >=0.2, binding-wx, directory
+  hs-source-dirs: demo
 
 source-repository head
   type:     hg

@@ -1,13 +1,17 @@
 import Data.IORef
 import Control.Monad
 import Graphics.UI.Gtk
+import System.Directory
 
 import Data.Binding.List
 import Graphics.UI.Gtk.Binding
 
 data Person = Person {name::String, age::Int, active::Bool} deriving (Read, Show)
 
-main = do --read the input
+main = do --create an input file if none exists
+          doesFileExist "in.txt" >>= (`unless` writeFile "in.txt"
+		     "[Person {name = \"Joe\", age = 32, active = True},Person {name = \"Fred\", age = 50, active = False},Person {name = \"Alice\", age = 43, active = True}]")
+          --read the input
           f <- readFile "in.txt"
           bl <- toBindingList $ read f :: IO (BindingList IORef Person)
           --create widgits
