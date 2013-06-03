@@ -23,6 +23,7 @@ test-suite HTF
   main-is:        HTF.hs
   build-depends:  base, binding-core, random, HTF, HUnit, QuickCheck
   hs-source-dirs: tests
+  other-modules:  HUnit, QuickCheck
 
 source-repository head
   type:     hg
