@@ -11,7 +11,7 @@ synopsis:           Data Binding in Gtk2Hs
 build-type:         Simple
 category:           GUI, User Interfaces
 description:        Bind mutable data and lists to Gtk2Hs widgets.
-                    Examples are provided by the included demo programs.
+                    See the tests for examples.
 
 library
   build-depends:   base <5, gtk, binding-core >=0.2, mtl

@@ -11,7 +11,7 @@ synopsis:           Data Binding in WxHaskell
 build-type:         Simple
 category:           GUI, User Interfaces
 description:        Bind mutable data and lists to WxHaskell widgets.
-                    Examples are provided by the included demo programs.
+                    See the tests for examples.
 
 library
   build-depends:   base <5, wxcore, wx, binding-core >=0.2, stm
